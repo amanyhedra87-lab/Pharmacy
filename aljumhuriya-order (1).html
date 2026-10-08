@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>صيدلية الجمهورية - اطلب دواءك</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F8F5;--card:#fff;--ink:#12302A;--mute:#5E7A72;--brand:#0E6B57;--brand2:#0A4F40;--line:#D5E5DE;--acc:#E8A33D;--on:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1B17;--card:#152923;--card:#14271F;--ink:#E6F2ED;--mute:#93B1A7;--brand:#2FB596;--brand2:#1E8C74;--line:#25423A;--on:#06241D}}
+:root[data-theme="dark"]{--bg:#0D1B17;--card:#14271F;--ink:#E6F2ED;--mute:#93B1A7;--brand:#2FB596;--brand2:#1E8C74;--line:#25423A;--on:#06241D}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Cairo',Tahoma,Arial,sans-serif;line-height:1.6;padding-bottom:90px}
+.wrap{max-width:560px;margin:0 auto;padding:16px}
+header{background:var(--brand);color:var(--on);padding:22px 16px 26px;border-radius:0 0 28px 28px}
+header .in{max-width:560px;margin:0 auto}
+h1{margin:0;font-size:26px;font-weight:800}
+header p{margin:4px 0 0;opacity:.9;font-size:15px}
+.badge{display:inline-block;margin-top:10px;background:var(--acc);color:#2b1c00;font-weight:600;font-size:13px;padding:3px 12px;border-radius:99px}
+h2{font-size:18px;margin:22px 0 10px}
+.free{display:flex;gap:8px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:11px 12px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
+.free input.q{width:70px;text-align:center;flex:none}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px}
+.add{background:var(--brand);color:var(--on);font-weight:600;padding:0 18px;flex:none}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.tab{flex:none;background:var(--card);border:1.5px solid var(--line);color:var(--ink);padding:6px 14px;border-radius:99px}
+.tab[aria-pressed="true"]{background:var(--brand);color:var(--on);border-color:var(--brand)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.item{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:12px;text-align:start;color:var(--ink);font-weight:600;min-height:64px}
+.item small{display:block;color:var(--mute);font-weight:400}
+.item:active{transform:scale(.97)}
+.cart{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:6px 12px}
+.row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.row .n{flex:1;font-weight:600}
+.row button{width:32px;height:32px;background:var(--bg);color:var(--ink);border:1.5px solid var(--line);font-size:18px;line-height:1}
+.row .c{min-width:22px;text-align:center}
+.empty{color:var(--mute);padding:14px 0;text-align:center}
+label{display:block;font-size:14px;color:var(--mute);margin:10px 0 4px}
+.note{background:var(--card);border-inline-start:5px solid var(--acc);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--mute);margin-top:16px}
+.bar{position:fixed;inset-inline:0;bottom:0;background:var(--card);border-top:1.5px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.bar .in{max-width:560px;margin:0 auto}
+.send{width:100%;background:#1FA855;color:#fff;font-weight:800;font-size:17px;padding:13px}
+.send:disabled{opacity:.45;cursor:not-allowed}
+.err{color:#C0392B;font-size:14px;min-height:20px;margin:2px 0 6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="in">
+<h1>صيدلية الجمهورية</h1>
+<p>اطلب دواءك وهيوصلك لحد البيت</p>
+<span class="badge">توصيل لكل مناطق أسوان</span>
+</div></header>
+
+<main class="wrap">
+<h2>اكتب اسم الدواء</h2>
+<div class="free">
+<input id="fn" placeholder="مثال: بانادول إكسترا" aria-label="اسم الدواء">
+<input id="fq" class="q" type="number" min="1" value="1" aria-label="الكمية">
+<button class="add" id="fadd">أضف</button>
+</div>
+
+<h2>أو اختار من القايمة</h2>
+<div class="tabs" id="tabs"></div>
+<div class="grid" id="grid"></div>
+
+<h2>طلبك</h2>
+<div class="cart" id="cart"></div>
+
+<h2>بيانات التوصيل</h2>
+<label for="nm">الاسم</label><input id="nm" autocomplete="name">
+<label for="ph">رقم الموبايل</label><input id="ph" type="tel" inputmode="tel" autocomplete="tel">
+<label for="ad">العنوان بالتفصيل (المنطقة، الشارع، علامة مميزة)</label><textarea id="ad" rows="2"></textarea>
+<label for="nt">ملاحظات (اختياري)</label><input id="nt">
+
+<div class="note">الأدوية اللي بروشتة: ابعت صورة الروشتة في المحادثة بعد ما الطلب يتفتح على واتساب. الصيدلي هيراجع الطلب ويأكد السعر ووقت التوصيل قبل التنفيذ.</div>
+</main>
+
+<div class="bar"><div class="in">
+<div class="err" id="err" role="alert"></div>
+<button class="send" id="send">إرسال الطلب على واتساب</button>
+</div></div>
+
+<script>
+// عدلي القايمة دي بمنتجات الصيدلية الحقيقية: [الاسم, الوصف, القسم]
+var CATALOG=[
+["بانادول","مسكن وخافض حرارة","مسكنات وبرد"],["أدول","مسكن وخافض حرارة","مسكنات وبرد"],
+["فيكس","للكحة والبرد","مسكنات وبرد"],["كونجستال","للبرد والإنفلونزا","مسكنات وبرد"],
+["فيتامين سي","مقوي مناعة","فيتامينات"],["فيتامين د","","فيتامينات"],
+["أوميجا 3","","فيتامينات"],["زنك","","فيتامينات"],
+["شامبو أطفال","","عناية"],["كريم مرطب","","عناية"],
+["كمامات","","مستلزمات"],["جهاز قياس ضغط","","مستلزمات"]];
+var cats=[],cat="",cart=[];
+CATALOG.forEach(function(p){if(cats.indexOf(p[2])<0)cats.push(p[2])});
+cat=cats[0];
+function $(i){return document.getElementById(i)}
+try{var s=localStorage.getItem("jm_cart");if(s)cart=JSON.parse(s)||[]}catch(e){}
+function save(){try{localStorage.setItem("jm_cart",JSON.stringify(cart))}catch(e){}}
+function add(n,q){n=(n||"").trim();q=parseInt(q)||1;if(!n)return;
+var f=cart.filter(function(c){return c.n===n})[0];if(f)f.q+=q;else cart.push({n:n,q:q});save();draw()}
+function tabs(){$("tabs").innerHTML="";cats.forEach(function(c){var b=document.createElement("button");b.className="tab";b.textContent=c;
+b.setAttribute("aria-pressed",c===cat);b.onclick=function(){cat=c;tabs();grid()};$("tabs").appendChild(b)})}
+function grid(){$("grid").innerHTML="";CATALOG.filter(function(p){return p[2]===cat}).forEach(function(p){
+var b=document.createElement("button");b.className="item";b.innerHTML="";b.appendChild(document.createTextNode(p[0]));
+if(p[1]){var s=document.createElement("small");s.textContent=p[1];b.appendChild(s)}
+b.onclick=function(){add(p[0],1)};$("grid").appendChild(b)})}
+function draw(){var c=$("cart");c.innerHTML="";
+if(!cart.length){c.innerHTML='<div class="empty">السلة فاضية. أضف دواء من فوق.</div>';return}
+cart.forEach(function(it,i){var r=document.createElement("div");r.className="row";
+r.innerHTML='<span class="n"></span><button aria-label="نقص">−</button><span class="c"></span><button aria-label="زود">+</button>';
+r.children[0].textContent=it.n;r.children[2].textContent=it.q;
+r.children[1].onclick=function(){it.q--;if(it.q<1)cart.splice(i,1);save();draw()};
+r.children[3].onclick=function(){it.q++;save();draw()};c.appendChild(r)})}
+$("fadd").onclick=function(){add($("fn").value,$("fq").value);$("fn").value="";$("fq").value=1;$("fn").focus()};
+$("fn").onkeydown=function(e){if(e.key==="Enter")$("fadd").click()};
+$("send").onclick=function(){
+var nm=$("nm").value.trim(),ph=$("ph").value.trim(),ad=$("ad").value.trim(),e=$("err");e.textContent="";
+if(!cart.length){e.textContent="أضف دواء واحد على الأقل.";return}
+if(!nm||!ph||!ad){e.textContent="اكتب الاسم والموبايل والعنوان.";return}
+var t="طلب جديد من الموقع 💊\n\n";
+cart.forEach(function(c,i){t+=(i+1)+". "+c.n+" × "+c.q+"\n"});
+t+="\nالاسم: "+nm+"\nالموبايل: "+ph+"\nالعنوان: "+ad;
+var n=$("nt").value.trim();if(n)t+="\nملاحظات: "+n;
+var a=document.createElement("a");a.href="https://wa.me/201226699551?text="+encodeURIComponent(t);a.target="_blank";a.rel="noopener";
+document.body.appendChild(a);a.click();a.remove()};
+tabs();grid();draw();
+</script>
+</body>
+</html>
